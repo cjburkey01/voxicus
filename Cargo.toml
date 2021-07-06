@@ -1,11 +1,16 @@
 [package]
 name = "voxicus"
 version = "0.1.0"
+description = "A fully scriptable voxel game"
+authors = ["CJ Burkey<bulletlang@gmail.com>"]
+readme = "README.md"
+publish = false
 edition = "2018"
 
+# Choose Metal for Mac and Vulkan for Windows/Linux
 [features]
 metal = ["amethyst/metal"]
 vulkan = ["amethyst/vulkan"]
 
 [dependencies]
-amethyst = { version = "0.15.3" }
+amethyst = "0.15.3"
