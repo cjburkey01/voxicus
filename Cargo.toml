@@ -1,0 +1,8 @@
+[package]
+name = "voxicus"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+amethyst = { version = "0.15.3", features = ["metal"] }
+amethyst-imgui = { version = "0.7.1", features = ["metal"] }

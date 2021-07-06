@@ -1,0 +1,13 @@
+# IDEA
+**.iml
+**/.idea
+
+# Rust
+/target
+Cargo.lock
+
+# ImGUI
+imgui.ini
+
+# Mac
+**.DS_Store
