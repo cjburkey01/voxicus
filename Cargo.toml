@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A fully scriptable voxel game"
 authors = ["CJ Burkey<bulletlang@gmail.com>"]
 readme = "README.md"
+license = "MIT"
 publish = false
 edition = "2018"
 
