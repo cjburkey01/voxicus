@@ -3,5 +3,9 @@ name = "voxicus"
 version = "0.1.0"
 edition = "2018"
 
+[features]
+metal = ["amethyst/metal"]
+vulkan = ["amethyst/vulkan"]
+
 [dependencies]
-amethyst = { version = "0.15.3", features = ["metal"] }
+amethyst = { version = "0.15.3" }
