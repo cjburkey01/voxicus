@@ -6,5 +6,8 @@
 /target
 Cargo.lock
 
+# Distill assets
+/.assets_db
+
 # Mac
 **.DS_Store

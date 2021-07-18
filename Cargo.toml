@@ -16,4 +16,13 @@ no-slow-safety-checks = ["amethyst/no-slow-safety-checks"]
 
 [dependencies]
 serde = "1.0.126"
-amethyst = "0.15.3"
+
+# Until changes in https://github.com/amethyst/legion/pull/186 becomes
+# available via amethyst directly
+[dependencies.legion]
+version = "0.4.0"
+features = ["serialize", "crossbeam-events", "codegen"]
+
+[dependencies.amethyst]
+git = "https://github.com/amethyst/amethyst"
+rev = "6d0e7aaf58a4d1483b902f63920044eabb865c92"
