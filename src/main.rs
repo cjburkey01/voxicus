@@ -1,7 +1,14 @@
+mod cam;
+mod input;
+mod voxel;
+
+use crate::cam::{FreeFlyCamera, FreeFlyCameraSystem};
 use amethyst::assets::AssetLoaderSystemData;
 use amethyst::core::ecs::{Builder, World, WorldExt};
+use amethyst::core::math::Vector3;
 use amethyst::core::{Transform, TransformBundle};
-use amethyst::input::{InputBundle, StringBindings};
+use amethyst::input::{Axis, Bindings, InputBundle, StringBindings};
+use amethyst::input::{Button, VirtualKeyCode};
 use amethyst::renderer::light::{Light, PointLight};
 use amethyst::renderer::palette::rgb::Rgb;
 use amethyst::renderer::plugins::RenderPbr3D;
@@ -43,6 +50,7 @@ fn initialize_camera(world: &mut World) {
         .with(transform)
         .with(auto_fov)
         .with(Camera::perspective(1.0, std::f32::consts::FRAC_PI_2, 0.05))
+        .with(FreeFlyCamera { speed: 5.0 })
         .build();
 }
 
@@ -90,7 +98,30 @@ fn initialize_light(world: &mut World) {
     let mut transform = Transform::default();
     transform.set_translation_xyz(5.0, 5.0, 20.0);
 
+    // Create an example light
     world.create_entity().with(light).with(transform).build();
+}
+
+fn init_input_bindings() -> amethyst::Result<Bindings<input::MovementBindingTypes>> {
+    let mut bindings = Bindings::new();
+
+    // Insert main control axes
+    bindings.insert_axis(
+        input::AxisBinding::Horizontal,
+        Axis::Emulated {
+            pos: Button::Key(VirtualKeyCode::D),
+            neg: Button::Key(VirtualKeyCode::A),
+        },
+    )?;
+    bindings.insert_axis(
+        input::AxisBinding::Vertical,
+        Axis::Emulated {
+            pos: Button::Key(VirtualKeyCode::W),
+            neg: Button::Key(VirtualKeyCode::S),
+        },
+    )?;
+
+    Ok(bindings)
 }
 
 fn main() -> amethyst::Result<()> {
@@ -100,9 +131,8 @@ fn main() -> amethyst::Result<()> {
     let _app_root = application_root_dir()?;
 
     let game_data = GameDataBuilder::default()
-        .with(AutoFovSystem::new(), "auto_fov", &[])
         .with_bundle(TransformBundle::new())?
-        .with_bundle(InputBundle::<StringBindings>::default())?
+        .with_bundle(InputBundle::new().with_bindings(init_input_bindings()?))?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(
@@ -115,7 +145,13 @@ fn main() -> amethyst::Result<()> {
                     .with_clear([0.34, 0.36, 0.52, 1.0]),
                 )
                 .with_plugin(RenderPbr3D::default()),
-        )?;
+        )?
+        .with(AutoFovSystem::new(), "auto_fov", &[])
+        .with(
+            FreeFlyCameraSystem::default(),
+            "free_fly_camera",
+            &["transform_system", "input_system"],
+        );
 
     // Start the game
     Application::build("/", MainState)?.build(game_data)?.run();
